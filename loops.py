@@ -119,4 +119,4 @@ print("password shuffle = ", password_list)
 finalHardPassword = ""
 for letter in  password_list:
     finalHardPassword += letter
-print("finalHardPassword= ",finalHardPassword)
+print("finalHardPassword= ", finalHardPassword)
