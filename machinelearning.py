@@ -152,3 +152,143 @@ print("Creating linear regression model:")
 plt.scatter(x, y)
 plt.plot(x, mymodel)
 plt.show()
+
+
+# Polynomial Regression
+# If your data points clearly will not fit a linear regression (a straight line through all data points), it might be ideal for polynomial regression.
+
+# Polynomial regression, like linear regression, uses the relationship between the variables x and y to find the best way to draw a line through the data points.
+import numpy
+import matplotlib.pyplot as plt
+
+x = [1,2,3,5,6,7,8,9,10,12,13,14,15,16,18,19,21,22]
+y = [100,90,80,60,60,55,60,65,70,70,75,76,78,79,90,99,99,100]
+
+mymodel = numpy.poly1d(numpy.polyfit(x, y, 3))
+
+myline = numpy.linspace(1, 22, 100)
+print("Creating polynomial regression model:")
+plt.scatter(x, y)
+plt.plot(myline, mymodel(myline))
+plt.show()
+
+# R-Squared
+
+# It is important to know how well the relationship between the values of the x- and y-axis is, if there are no relationship the polynomial regression can not be used to predict anything.
+
+# The relationship is measured with a value called the r-squared.
+
+# The r-squared value ranges from 0 to 1, where 0 means no relationship, and 1 means 100% related.
+
+import numpy
+from sklearn.metrics import r2_score
+
+x = [1,2,3,5,6,7,8,9,10,12,13,14,15,16,18,19,21,22]
+y = [100,90,80,60,60,55,60,65,70,70,75,76,78,79,90,99,99,100]
+
+mymodel = numpy.poly1d(numpy.polyfit(x, y, 3))
+print("R-squared value:")
+print(r2_score(y, mymodel(x)))
+
+
+# Predict Future Values
+# Now we can use the information we have gathered to predict future values.
+#
+# Example: Let us try to predict the speed of a car that passes the tollbooth at around the time 17:00:
+
+# To do so, we need the same mymodel array from the example above:
+
+import numpy
+from sklearn.metrics import r2_score
+
+x = [1,2,3,5,6,7,8,9,10,12,13,14,15,16,18,19,21,22]
+y = [100,90,80,60,60,55,60,65,70,70,75,76,78,79,90,99,99,100]
+
+mymodel = numpy.poly1d(numpy.polyfit(x, y, 3))
+print("Predict speed of the car passing at 17:00: ")
+speed = mymodel(17)
+print(speed)
+
+
+# Bad fit for Polynomial regression
+import numpy
+import matplotlib.pyplot as plt
+
+x = [89,43,36,36,95,10,66,34,38,20,26,29,48,64,6,5,36,66,72,40]
+y = [21,46,3,35,67,95,53,72,58,10,26,34,90,33,38,20,56,2,47,15]
+
+mymodel = numpy.poly1d(numpy.polyfit(x, y, 3))
+
+myline = numpy.linspace(2, 95, 100)
+
+plt.scatter(x, y)
+plt.plot(myline, mymodel(myline))
+plt.show()
+
+# bad releationship score check for Polynomial regression
+import numpy
+from sklearn.metrics import r2_score
+
+x = [89,43,36,36,95,10,66,34,38,20,26,29,48,64,6,5,36,66,72,40]
+y = [21,46,3,35,67,95,53,72,58,10,26,34,90,33,38,20,56,2,47,15]
+
+mymodel = numpy.poly1d(numpy.polyfit(x, y, 3))
+print("R-squared value for bad fit check:")
+print(r2_score(y, mymodel(x)))
+
+# The result: 0.00995 indicates a very bad relationship, and tells us that this data set is not suitable for polynomial regression.
+
+
+
+# Multiple Regression
+
+import pandas
+from sklearn import linear_model
+
+df = pandas.read_csv("data.csv")
+
+X = df[['Weight', 'Volume']]
+y = df['CO2']
+
+regr = linear_model.LinearRegression()
+regr.fit(X, y)
+
+#predict the CO2 emission of a car where the weight is 2300kg, and the volume is 1300cm3:
+predictedCO2 = regr.predict([[2300, 1300]])
+print("Predicted CO2 emission:")
+print(predictedCO2)
+# We have predicted that a car with 1.3 liter engine, and a weight of 2300 kg, will release approximately 107 grams of CO2 for every kilometer it drives.
+
+# Coefficient
+# The coefficient is a factor that describes the relationship with an unknown variable.
+
+# Example: if x is a variable, then 2x is x two times. x is the unknown variable, and the number 2 is the coefficient.
+
+# In this case, we can ask for the coefficient value of weight against CO2, and for volume against CO2. The answer(s) we get tells us what would happen if we increase, or decrease, one of the independent values.
+
+import pandas
+from sklearn import linear_model
+
+df = pandas.read_csv("data.csv")
+
+X = df[['Weight', 'Volume']]
+y = df['CO2']
+
+regr = linear_model.LinearRegression()
+regr.fit(X, y)
+
+print(regr.coef_)
+
+# [0.00755095 0.00780526]
+"""The result array represents the coefficient values of weight and volume.
+
+Weight: 0.00755095
+Volume: 0.00780526
+
+These values tell us that if the weight increase by 1kg, the CO2 emission increases by 0.00755095g.
+
+And if the engine size (Volume) increases by 1cm3, the CO2 emission increases by 0.00780526g.
+
+I think that is a fair guess, but let test it!
+
+We have already predicted that if a car with a 1300cm3 engine weighs 2300kg, the CO2 emission will be approximately 107g."""
